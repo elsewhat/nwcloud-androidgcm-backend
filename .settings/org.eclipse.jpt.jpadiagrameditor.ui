@@ -1,0 +1,9 @@
+#This file contains JPA Diagram Editor settings
+#Wed Oct 17 22:01:45 CEST 2012
+defaultTableNamePrefix=T_
+directEditAffectsClass=true
+accessType=field
+diagramFolder=diagrams
+collectionType=collection
+oneToManyOldStyle=false
+defaultPackage=org.sapmentors.nwcloud.gcm.jpa
