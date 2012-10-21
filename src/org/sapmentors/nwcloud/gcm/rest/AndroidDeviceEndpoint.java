@@ -52,7 +52,7 @@ public class AndroidDeviceEndpoint {
 	@Context
 	UriInfo uriInfo;
 	
-	//attributes used for reading/writing to JPA persistence
+	//Used for reading/writing to JPA persistence
 	private static EntityManagerFactory entityMangerFactory;
 	
 	/**
@@ -174,28 +174,32 @@ public class AndroidDeviceEndpoint {
     //TODO: Implement a delete method
     
     
-    /** 
-     * Initialize the persistency layer (JPA) 
-     *  
-     * @throws Exception 
-     */  
-    private void initPersistencyLayer() {  
+	/**
+	 * Initialize the persistency layer (JPA)
+	 * 
+	 * @throws Exception
+	 */
+	private void initPersistencyLayer() {
 
-              try {  
-                        logger.debug("Setting up persistency layer for AndroidDeviceEndpoint");  
-                        InitialContext ctx = new InitialContext();  
-                        DataSource dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/DefaultDB");  
-                        Map<String, DataSource> properties = new HashMap<String, DataSource>();  
-                        properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, dataSource);  
+		try {
+			logger.debug("Setting up persistency layer for AndroidDeviceEndpoint");
+			InitialContext ctx = new InitialContext();
+			DataSource dataSource = (DataSource) ctx
+					.lookup("java:comp/env/jdbc/DefaultDB");
+			Map<String, DataSource> properties = new HashMap<String, DataSource>();
+			properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE,
+					dataSource);
 
-                        //IMPORTANT! The first parameter must match your JPA Model name in persistence.xml  
-                        entityMangerFactory = Persistence.createEntityManagerFactory("nwcloud-androidgcm-backend", properties);  
-              } catch (NamingException e) {  
-                        //TODO: Handle exception better  
-                        logger.error("FATAL: Could not intialize database", e);  
-                        throw new RuntimeException(e);  
-              }  
+			// IMPORTANT! The first parameter must match your JPA Model name in
+			// persistence.xml
+			entityMangerFactory = Persistence.createEntityManagerFactory(
+					"nwcloud-androidgcm-backend", properties);
+		} catch (NamingException e) {
+			// TODO: Handle exception better
+			logger.error("FATAL: Could not intialize database", e);
+			throw new RuntimeException(e);
+		}
 
-    }  
+	}
 	
 }
