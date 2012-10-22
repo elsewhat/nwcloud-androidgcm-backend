@@ -1,4 +1,4 @@
-package org.sapmentors.nwcloud.gcm.jpa;
+package org.sapmentors.nwcloud.gcm.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

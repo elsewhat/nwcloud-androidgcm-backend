@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
-import org.sapmentors.nwcloud.gcm.jpa.AndroidDevice;
+import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

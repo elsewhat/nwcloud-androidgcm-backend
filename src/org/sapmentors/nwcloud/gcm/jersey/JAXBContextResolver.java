@@ -8,7 +8,7 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 
-import org.sapmentors.nwcloud.gcm.jpa.AndroidDevice;
+import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
 
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.api.json.JSONJAXBContext;
