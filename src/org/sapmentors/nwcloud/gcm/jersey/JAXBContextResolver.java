@@ -1,4 +1,4 @@
-package org.sapmentors.nwcloud.gcm.rest;
+package org.sapmentors.nwcloud.gcm.jersey;
 
 import java.util.Arrays;
 import java.util.HashSet;

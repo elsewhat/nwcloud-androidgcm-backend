@@ -15,7 +15,7 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>  
       <param-name>javax.ws.rs.Application</param-name>  
-      <param-value>org.sapmentors.nwcloud.gcm.rest.JAXRSApplication</param-value>  
+      <param-value>org.sapmentors.nwcloud.gcm.jersey.JAXRSApplication</param-value>  
     </init-param>  
     <load-on-startup>1</load-on-startup>
   </servlet>

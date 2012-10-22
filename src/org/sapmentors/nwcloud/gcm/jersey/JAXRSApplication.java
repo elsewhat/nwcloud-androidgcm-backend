@@ -1,10 +1,12 @@
-package org.sapmentors.nwcloud.gcm.rest;
+package org.sapmentors.nwcloud.gcm.jersey;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.core.Application;
-import javax.ws.rs.ext.Provider;
+
+import org.sapmentors.nwcloud.gcm.rest.AndroidDeviceEndpoint;
+import org.sapmentors.nwcloud.gcm.rest.MessagingEndpoint;
 
 /**
  * Required in order to bind enpoints to JAX-RS (Jersey)
@@ -21,6 +23,7 @@ public class JAXRSApplication extends Application {
 		Set<Class<?>> set = new HashSet<Class<?>>();
 		//Add all endpoints to this set
 		set.add(AndroidDeviceEndpoint.class);
+		set.add(MessagingEndpoint.class);
 		//Add Providers
 		set.add(JAXBContextResolver.class);
 		return set;
