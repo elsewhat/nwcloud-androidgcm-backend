@@ -176,7 +176,7 @@ public class AndroidDeviceEndpoint {
     
 	/**
 	 * Initialize the persistency layer (JPA)
-	 * 
+	 * TODO: Swap to PersistenceClient
 	 * @throws Exception
 	 */
 	private void initPersistencyLayer() {
@@ -199,7 +199,6 @@ public class AndroidDeviceEndpoint {
 			logger.error("FATAL: Could not intialize database", e);
 			throw new RuntimeException(e);
 		}
-
 	}
 	
 }

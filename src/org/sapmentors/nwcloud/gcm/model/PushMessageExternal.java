@@ -11,11 +11,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement
-public class PushMessage {
-	private String emailFrom; 
-	private String[] emailTo; 
-	private int messageType; 
-	private String message;
+public class PushMessageExternal {
+	protected String emailFrom; 
+	protected String[] emailTo; 
+	protected int messageType; 
+	protected String message;
 	
 	public String getEmailFrom() {
 		return emailFrom;
