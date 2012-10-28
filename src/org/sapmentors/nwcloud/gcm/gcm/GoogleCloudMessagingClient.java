@@ -24,7 +24,7 @@ import com.google.android.gcm.server.Sender;
 
 public class GoogleCloudMessagingClient {
 	private final static Logger logger = LoggerFactory.getLogger(GoogleCloudMessagingClient.class);
-	private static final String GCM_API_KEY = "AIzaSyCsnsFfQIfdh8fyLOAoyp3c8WepCfUN3JA";
+	private static final String GCM_API_KEY = "AIzaSyBWxYKSdl1NEHHDFxqE64ZUA8ibJNIwKww";
 	
 	private PushMessageInternal pushMessage; 
 	private PushMessageResponse messageResponse; 
@@ -55,7 +55,7 @@ public class GoogleCloudMessagingClient {
 		        		AndroidDevice.class).setParameter(AndroidDevice.QUERY_BY_EMAIL_PARAM, pushMessage.getEmailFrom()).getSingleResult();
 			 pushMessage.setDeviceFrom(deviceFrom);
 		}catch(NoResultException exception){
-			throw new NoResultException("Sender has not been registered for GCM sending");
+			throw new NoResultException("Sender's android device has not been registered for GCM sending in nwcloud backend");
 		}
 		
 		//expand recipients

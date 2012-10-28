@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
+import org.sapmentors.nwcloud.gcm.model.PersistenceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +52,10 @@ public class AndroidDeviceEndpoint {
 	//Ask jersey to populate this parameter for one of the REST methods
 	@Context
 	UriInfo uriInfo;
+
+	private PersistenceClient persistenceClient;
 	
-	//Used for reading/writing to JPA persistence
-	private static EntityManagerFactory entityMangerFactory;
+
 	
 	/**
 	 * Constructor must have no parameters (Jersey)
@@ -62,7 +64,7 @@ public class AndroidDeviceEndpoint {
 	public AndroidDeviceEndpoint(){
 		logger.debug("Constructor of DeviceInfoEndpoint called");
 		
-		initPersistencyLayer();
+		persistenceClient = new PersistenceClient();
 	}
 	
 	/**
@@ -81,7 +83,7 @@ public class AndroidDeviceEndpoint {
 		logger.info("getAndroidDevices method called");
 		
 		
-		EntityManager entityManager = entityMangerFactory.createEntityManager();  
+		EntityManager entityManager = persistenceClient.getEntityManager();  
         List<AndroidDevice> resultList = entityManager.createNamedQuery(AndroidDevice.QUERY_ALL_ENTRIES,  
         		AndroidDevice.class).getResultList();  
         
@@ -126,7 +128,7 @@ public class AndroidDeviceEndpoint {
               logger.info("Storing android device for "+androidDevice.getEmail());  
 
               //Start persistence transaction
-              EntityManager entityManager = entityMangerFactory.createEntityManager();  
+              EntityManager entityManager = persistenceClient.getEntityManager();  
               entityManager.getTransaction().begin();  
               
               
@@ -173,32 +175,5 @@ public class AndroidDeviceEndpoint {
     
     //TODO: Implement a delete method
     
-    
-	/**
-	 * Initialize the persistency layer (JPA)
-	 * TODO: Swap to PersistenceClient
-	 * @throws Exception
-	 */
-	private void initPersistencyLayer() {
-
-		try {
-			logger.debug("Setting up persistency layer for AndroidDeviceEndpoint");
-			InitialContext ctx = new InitialContext();
-			DataSource dataSource = (DataSource) ctx
-					.lookup("java:comp/env/jdbc/DefaultDB");
-			Map<String, DataSource> properties = new HashMap<String, DataSource>();
-			properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE,
-					dataSource);
-
-			// IMPORTANT! The first parameter must match your JPA Model name in
-			// persistence.xml
-			entityMangerFactory = Persistence.createEntityManagerFactory(
-					"nwcloud-androidgcm-backend", properties);
-		} catch (NamingException e) {
-			// TODO: Handle exception better
-			logger.error("FATAL: Could not intialize database", e);
-			throw new RuntimeException(e);
-		}
-	}
 	
 }
