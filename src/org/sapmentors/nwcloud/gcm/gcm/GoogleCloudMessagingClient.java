@@ -13,7 +13,6 @@ import org.sapmentors.nwcloud.gcm.model.PersistenceClient;
 import org.sapmentors.nwcloud.gcm.model.PushMessageExternal;
 import org.sapmentors.nwcloud.gcm.model.PushMessageInternal;
 import org.sapmentors.nwcloud.gcm.model.PushMessageResponse;
-import org.sapmentors.nwcloud.gcm.rest.AndroidDeviceEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,6 @@ public class GoogleCloudMessagingClient {
 	private static final String GCM_API_KEY = "AIzaSyBWxYKSdl1NEHHDFxqE64ZUA8ibJNIwKww";
 	
 	private PushMessageInternal pushMessage; 
-	private PushMessageResponse messageResponse; 
 	private PersistenceClient persistenceClient;
 	
 	

@@ -4,19 +4,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
-import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -27,7 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
 import org.sapmentors.nwcloud.gcm.model.PersistenceClient;
 import org.slf4j.Logger;
