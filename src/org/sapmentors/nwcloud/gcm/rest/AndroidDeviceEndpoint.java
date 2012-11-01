@@ -1,7 +1,9 @@
 package org.sapmentors.nwcloud.gcm.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,9 +12,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -148,23 +152,70 @@ public class AndroidDeviceEndpoint {
               }
     
               
-               
-
-
-              //The HTTP response should include the URL to the newly generated new entry.  
-              //Probably exist a better way of doing this, but it works  
-              //TODO: Do we need to return the URI ? Is it useful for the client?
+              //return the url to the resource created
               try {  
-                        URI createdURI = new URI(uriInfo.getAbsolutePath()+""+ androidDevice.getRegistrationKey());  
-                        return Response.created(createdURI).build();  
+            	  String email = URLEncoder.encode(androidDevice.getEmail(),"UTF-8");
+            	  URI createdURI = new URI(uriInfo.getAbsolutePath()+""+ email);  
+            	  return Response.created(createdURI).build();  
               } catch (URISyntaxException e) {  
-                        logger.warn("Unable to create correct URI for newly created feed " + androidDevice, e);  
-                        //fallback is to include the input path (which will be lacking the id of the new object)  
-                        return Response.created(uriInfo.getAbsolutePath()).build();  
-              }   
+            	  logger.warn("Unable to create correct URI for newly created feed " + androidDevice, e);  
+            	  //fallback is to include the input path (which will be lacking the id of the new object)  
+            	  return Response.created(uriInfo.getAbsolutePath()).build();  
+              } catch (UnsupportedEncodingException e) {
+            	  logger.warn("Unable to create correct URI for newly created feed " + androidDevice, e);  
+            	  //fallback is to include the input path (which will be lacking the id of the new object)  
+            	  return Response.created(uriInfo.getAbsolutePath()).build();  
+			}   
     } 
     
-    //TODO: Implement a delete method
     
+    /** 
+     * POST a new object and store it in the persistency layer 
+     * 
+     * If the email already exist, the registration key will be updated.
+     * (ie. doesn't currently support multiple android devices with the same email account)
+     * 
+     * Must be called with the HTTP POST method and accepts input in both JSON and XML format. 
+     *  
+     * Curl example (deletes for dagfinn.parnas@gmail.com):  
+     * curl  -i -X DELETE -H "Accept: application/json" http://localhost:8080/nwcloud-androidgcm-backend/api/androiddevice/dagfinn.parnas%40gmail.com
+     * @param feedEntry 
+     * @return 
+     */  
+    @Path("/{Email}")
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response  deleteDevice(@PathParam("Email") String email) {
+        logger.info("Attempting to delete device based on email {0}", email);
+        //Start persistence transaction
+        EntityManager entityManager = persistenceClient.getEntityManager();  
+        entityManager.getTransaction().begin();  
+        
+        boolean doDelete=false;
+        //If we already have a device registered for the email, delete it
+        List<AndroidDevice> resultList = entityManager.createNamedQuery(AndroidDevice.QUERY_BY_EMAIL,  
+        		AndroidDevice.class).setParameter(AndroidDevice.QUERY_BY_EMAIL_PARAM, email).getResultList();  
+        
+        if(resultList!=null && resultList.size()>0){
+      	  logger.info("Found existing devices registered for " + email + " Deleting");
+      	  for (Iterator<AndroidDevice> iterator = resultList.iterator(); iterator.hasNext();) {
+				AndroidDevice existingAndroidDevice = (AndroidDevice) iterator.next();
+				entityManager.remove(existingAndroidDevice);
+				doDelete=true;
+			}
+        }
+        
+        entityManager.getTransaction().commit();
+        if(doDelete){
+        	//returning HTTP 200 OK
+        	return Response.ok("Devices for "+ email + " deleted").build();
+        }else {
+        	logger.info("Found no devices registered for " + email);
+        	//returning HTTP 204 No Content
+        	return Response.noContent().entity("Found no devices registered for " + email).build();
+        }
+        	
+   }
+        
 	
 }
