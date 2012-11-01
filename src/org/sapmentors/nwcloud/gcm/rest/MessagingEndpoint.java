@@ -52,7 +52,7 @@ public class MessagingEndpoint {
     @Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })  
     public PushMessageResponse sendGCMMessage(PushMessageExternal pushMessage) {  
           //The pushMessage is automatically populated based on the input. Yeah!  
-          logger.info("Received message from " + pushMessage.getEmailFrom());  
+          logger.info("Received message from " + pushMessage.getEmailFrom() + " message:"+pushMessage.getMessage() );  
           
           GoogleCloudMessagingClient gcmClient = new GoogleCloudMessagingClient(pushMessage);
           PushMessageResponse response = gcmClient.doSendMessage();

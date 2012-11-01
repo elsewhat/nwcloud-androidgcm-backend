@@ -135,8 +135,20 @@ public class AndroidDeviceEndpoint {
             	  for (Iterator<AndroidDevice> iterator = resultList.iterator(); iterator.hasNext();) {
 					AndroidDevice existingAndroidDevice = (AndroidDevice) iterator.next();
 					entityManager.remove(existingAndroidDevice);
-				}
+            	  }
+            	  
+            	  //We must commit the first transaction here
+	        	  try { 
+	                  entityManager.getTransaction().commit(); 
+	              }catch(PersistenceException e){//most likely primary key violation
+	            	  logger.warn("Unable to remove existing devices. Will continue, but may fail",e);
+	              }
+	        	  
+	        	  //create new transaction
+	        	  entityManager = persistenceClient.getEntityManager();  
+	              entityManager.getTransaction().begin();       	  
               }
+                           
               
                 
               //add timestamp

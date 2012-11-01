@@ -39,7 +39,7 @@ public class GoogleCloudMessagingClient {
 	
 	/**
 	 * Expand the push message received via REST interface.
-	 * Fetches persisted data
+	 * Does this by using the persisted information about the devices
 	 * 
 	 */
 	public PushMessageInternal expandPushMessage (PushMessageExternal pushMessageExt) throws NoResultException{
@@ -106,11 +106,12 @@ public class GoogleCloudMessagingClient {
 		
 		List<AndroidDevice> listRecipients = pushMessage.getDevicesTo();
 		
-		logger.debug("Sending message to " +listRecipients + " recipients");
+		//logger.debug("Sending message to " +listRecipients.size() + " recipients");
 		for (Iterator<AndroidDevice> iterator = listRecipients.iterator(); iterator.hasNext();) {
 			AndroidDevice androidDevice = (AndroidDevice) iterator.next();
 			//Send the message
 			try {
+				logger.debug("Sending message to " + androidDevice.getEmail());
 				Result result = sender.send(msg, androidDevice.getRegistrationKey(), 5);
 				//update device based on response from GCM
 				handleMessageResponse(androidDevice, result);
