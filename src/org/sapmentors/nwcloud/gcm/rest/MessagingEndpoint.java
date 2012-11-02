@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 @Path("/messaging")
 public class MessagingEndpoint {
-	private final static Logger logger = LoggerFactory.getLogger(AndroidDeviceEndpoint.class);
+	private final static Logger logger = LoggerFactory.getLogger(MobileDeviceEndpoint.class);
 	
 	//Ask jersey to populate this parameter for one of the REST methods
 	@Context

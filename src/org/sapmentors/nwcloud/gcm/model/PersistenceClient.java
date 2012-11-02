@@ -13,12 +13,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
-import org.sapmentors.nwcloud.gcm.rest.AndroidDeviceEndpoint;
+import org.sapmentors.nwcloud.gcm.rest.MobileDeviceEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PersistenceClient {
-	final Logger logger = LoggerFactory.getLogger(AndroidDeviceEndpoint.class);
+	final Logger logger = LoggerFactory.getLogger(MobileDeviceEndpoint.class);
 	
 	//Used for reading/writing to JPA persistence
 	private static EntityManagerFactory entityMangerFactory;

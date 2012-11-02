@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
+import org.sapmentors.nwcloud.gcm.model.MobileDevice;
 import org.sapmentors.nwcloud.gcm.model.PersistenceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 /**
  * REST endpoint definition using JAX-RS (Jersey)
  * 
- * This endpoint is used to register the Android device that can receive push messages
- * from this backend. 
+ * This endpoint is used to register the Mobile devices that can receive push messages
+ * from this backend. For now only Android devices are supported
  * 
  * It is typically called from the Android app after it has registering with 
  * Google Cloud Messaging and received a registration key.
@@ -40,9 +40,9 @@ import org.slf4j.LoggerFactory;
  * @author dagfinn.parnas
  *
  */
-@Path("/androiddevice")
-public class AndroidDeviceEndpoint {
-	final Logger logger = LoggerFactory.getLogger(AndroidDeviceEndpoint.class);
+@Path("/mobiledevice")
+public class MobileDeviceEndpoint {
+	final Logger logger = LoggerFactory.getLogger(MobileDeviceEndpoint.class);
 	
 	//Ask jersey to populate this parameter for one of the REST methods
 	@Context
@@ -56,46 +56,46 @@ public class AndroidDeviceEndpoint {
 	 * Constructor must have no parameters (Jersey)
 	 * It will initialize the datasource we are using (JPA)
 	 */
-	public AndroidDeviceEndpoint(){
+	public MobileDeviceEndpoint(){
 		logger.debug("Constructor of DeviceInfoEndpoint called");
 		
 		persistenceClient = new PersistenceClient();
 	}
 	
 	/**
-	 * Get all android devices that have registered to Google Cloud Messaging for our app
+	 * Get all mobile devices that have registered to Google Cloud Messaging for our app
 	 * Should not normally be exposed to external clients
 	 * (we use it to populate a list of people you can send a GCM push message to) 
 	 * 
 	 * Private data (ie. registration key) is removed from the objects
 	 * 
 	 * Curl example (return all feeds in json format):
-	 * $ curl  -i -H "Accept: application/json" http://localhost:8080/nwcloud-androidgcm-backend/api/androiddevice/
+	 * $ curl  -i -H "Accept: application/json" http://localhost:8080/nwcloud-androidgcm-backend/api/mobiledevice/
 	 */
 	@GET
 	@Produces( { MediaType.APPLICATION_JSON ,  MediaType.APPLICATION_XML})
-	public List<AndroidDevice> getAndroidDevices() {
-		logger.info("getAndroidDevices method called");
+	public List<MobileDevice> getMobileDevices() {
+		logger.debug("getMobileDevices method called");
 		
 		
 		EntityManager entityManager = persistenceClient.getEntityManager();  
-        List<AndroidDevice> resultList = entityManager.createNamedQuery(AndroidDevice.QUERY_ALL_ENTRIES,  
-        		AndroidDevice.class).getResultList();  
+        List<MobileDevice> resultList = entityManager.createNamedQuery(MobileDevice.QUERY_ALL_ENTRIES,  
+        		MobileDevice.class).getResultList();  
         
         if(resultList!=null){
 	        //remove sensitive data for response
-	        for (Iterator<AndroidDevice> iterator = resultList.iterator(); iterator.hasNext();) {
-				AndroidDevice androidDevice = (AndroidDevice) iterator.next();
-				androidDevice.setRegistrationKey(null);		
+	        for (Iterator<MobileDevice> iterator = resultList.iterator(); iterator.hasNext();) {
+				MobileDevice mobileDevice = (MobileDevice) iterator.next();
+				mobileDevice.setRegistrationKey(null);		
 			}
         }
 		
-        String message = (resultList==null)? "getAndroidDevices returning null": "getAndroidDevices returning " + resultList.size() + " entries";  
+        String message = (resultList==null)? "getMobileDevices returning null": "getMobileDevices returning " + resultList.size() + " entries";  
         logger.info(message);  
         
         //avoid returning content null. Instead it should return {}
         if(resultList==null){
-        	resultList=new ArrayList<AndroidDevice>();
+        	resultList=new ArrayList<MobileDevice>();
         }
         
         return resultList;
@@ -111,16 +111,16 @@ public class AndroidDeviceEndpoint {
      * Must be called with the HTTP POST method and accepts input in both JSON and XML format. 
      *  
      * Curl example (creates new feed): 
-     * $ curl -i -X POST -H 'Content-Type: application/json'  -d '{"registrationKey":"thisisnotagregistrationkey","email":"dagfinn.parnas@bouvet.no"}' http://localhost:8080/nwcloud-androidgcm-backend/api/androiddevice/ 
+     * $ curl -i -X POST -H 'Content-Type: application/json'  -d '{"registrationKey":"thisisnotagregistrationkey","email":"dagfinn.parnas@bouvet.no"}' http://localhost:8080/nwcloud-androidgcm-backend/api/mobiledevice/ 
      *  
      * @param feedEntry 
      * @return 
      */  
     @POST  
     @Consumes( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })  
-    public Response addDevice(AndroidDevice androidDevice) {  
+    public Response addDevice(MobileDevice mobileDevice) {  
               //The feedEntry is automatically populated based on the input. Yeah!  
-              logger.info("Storing android device for "+androidDevice.getEmail());  
+              logger.info("Storing mobile device for "+mobileDevice.getEmail());  
 
               //Start persistence transaction
               EntityManager entityManager = persistenceClient.getEntityManager();  
@@ -128,13 +128,13 @@ public class AndroidDeviceEndpoint {
               
               
               //If we already have a device registered for the email, delete it
-              List<AndroidDevice> resultList = entityManager.createNamedQuery(AndroidDevice.QUERY_BY_EMAIL,  
-              		AndroidDevice.class).setParameter(AndroidDevice.QUERY_BY_EMAIL_PARAM, androidDevice.getEmail()).getResultList();  
+              List<MobileDevice> resultList = entityManager.createNamedQuery(MobileDevice.QUERY_BY_EMAIL,  
+              		MobileDevice.class).setParameter(MobileDevice.QUERY_BY_EMAIL_PARAM, mobileDevice.getEmail()).getResultList();  
               if(resultList!=null && resultList.size()>0){
-            	  logger.info("Found existing devices registered for " + androidDevice.getEmail() + " Deleting them before adding new");
-            	  for (Iterator<AndroidDevice> iterator = resultList.iterator(); iterator.hasNext();) {
-					AndroidDevice existingAndroidDevice = (AndroidDevice) iterator.next();
-					entityManager.remove(existingAndroidDevice);
+            	  logger.info("Found existing devices registered for " + mobileDevice.getEmail() + " Deleting them before adding new");
+            	  for (Iterator<MobileDevice> iterator = resultList.iterator(); iterator.hasNext();) {
+					MobileDevice existingMobileDevice = (MobileDevice) iterator.next();
+					entityManager.remove(existingMobileDevice);
             	  }
             	  
             	  //We must commit the first transaction here
@@ -152,10 +152,10 @@ public class AndroidDeviceEndpoint {
               
                 
               //add timestamp
-              androidDevice.setTimeCreated(new Date());
+              mobileDevice.setTimeCreated(new Date());
               //persist the entry    
               try { 
-            	  entityManager.persist(androidDevice);
+            	  entityManager.persist(mobileDevice);
             	//Commit transaction
                   entityManager.getTransaction().commit(); 
               }catch(PersistenceException e){//most likely primary key violation
@@ -166,15 +166,15 @@ public class AndroidDeviceEndpoint {
               
               //return the url to the resource created
               try {  
-            	  String email = URLEncoder.encode(androidDevice.getEmail(),"UTF-8");
+            	  String email = URLEncoder.encode(mobileDevice.getEmail(),"UTF-8");
             	  URI createdURI = new URI(uriInfo.getAbsolutePath()+""+ email);  
             	  return Response.created(createdURI).build();  
               } catch (URISyntaxException e) {  
-            	  logger.warn("Unable to create correct URI for newly created feed " + androidDevice, e);  
+            	  logger.warn("Unable to create correct URI for newly created feed " + mobileDevice, e);  
             	  //fallback is to include the input path (which will be lacking the id of the new object)  
             	  return Response.created(uriInfo.getAbsolutePath()).build();  
               } catch (UnsupportedEncodingException e) {
-            	  logger.warn("Unable to create correct URI for newly created feed " + androidDevice, e);  
+            	  logger.warn("Unable to create correct URI for newly created feed " + mobileDevice, e);  
             	  //fallback is to include the input path (which will be lacking the id of the new object)  
             	  return Response.created(uriInfo.getAbsolutePath()).build();  
 			}   
@@ -190,7 +190,7 @@ public class AndroidDeviceEndpoint {
      * Must be called with the HTTP POST method and accepts input in both JSON and XML format. 
      *  
      * Curl example (deletes for dagfinn.parnas@gmail.com):  
-     * curl  -i -X DELETE -H "Accept: application/json" http://localhost:8080/nwcloud-androidgcm-backend/api/androiddevice/dagfinn.parnas%40gmail.com
+     * curl  -i -X DELETE -H "Accept: application/json" http://localhost:8080/nwcloud-androidgcm-backend/api/mobiledevice/dagfinn.parnas%40gmail.com
      * @param feedEntry 
      * @return 
      */  
@@ -205,14 +205,14 @@ public class AndroidDeviceEndpoint {
         
         boolean doDelete=false;
         //If we already have a device registered for the email, delete it
-        List<AndroidDevice> resultList = entityManager.createNamedQuery(AndroidDevice.QUERY_BY_EMAIL,  
-        		AndroidDevice.class).setParameter(AndroidDevice.QUERY_BY_EMAIL_PARAM, email).getResultList();  
+        List<MobileDevice> resultList = entityManager.createNamedQuery(MobileDevice.QUERY_BY_EMAIL,  
+        		MobileDevice.class).setParameter(MobileDevice.QUERY_BY_EMAIL_PARAM, email).getResultList();  
         
         if(resultList!=null && resultList.size()>0){
       	  logger.info("Found existing devices registered for " + email + " Deleting");
-      	  for (Iterator<AndroidDevice> iterator = resultList.iterator(); iterator.hasNext();) {
-				AndroidDevice existingAndroidDevice = (AndroidDevice) iterator.next();
-				entityManager.remove(existingAndroidDevice);
+      	  for (Iterator<MobileDevice> iterator = resultList.iterator(); iterator.hasNext();) {
+				MobileDevice existingDevice = (MobileDevice) iterator.next();
+				entityManager.remove(existingDevice);
 				doDelete=true;
 			}
         }

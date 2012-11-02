@@ -8,7 +8,7 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 
-import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
+import org.sapmentors.nwcloud.gcm.model.MobileDevice;
 
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.api.json.JSONJAXBContext;
@@ -17,7 +17,7 @@ import com.sun.jersey.api.json.JSONJAXBContext;
 public class JAXBContextResolver implements ContextResolver<JAXBContext> {
     private final JAXBContext context;
     private final Set<Class> types;
-    private Class[] ctypes = { AndroidDevice.class}; //your pojo class
+    private Class[] ctypes = { MobileDevice.class}; //your pojo class
    
     public JAXBContextResolver() throws Exception {
         this.types = new HashSet(Arrays.asList(ctypes));

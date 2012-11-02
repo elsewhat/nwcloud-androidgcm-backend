@@ -14,8 +14,8 @@ import java.util.List;
  *
  */
 public class PushMessageInternal extends PushMessageExternal {
-	protected AndroidDevice deviceFrom; 
-	protected List<AndroidDevice> devicesTo;
+	protected MobileDevice deviceFrom; 
+	protected List<MobileDevice> devicesTo;
 	protected List<String> emailsFailed; 
 	
 	public List<String> getEmailsFailed() {
@@ -32,22 +32,22 @@ public class PushMessageInternal extends PushMessageExternal {
 		emailsFailed.add(email);
 	}
 	
-	public AndroidDevice getDeviceFrom() {
+	public MobileDevice getDeviceFrom() {
 		return deviceFrom;
 	}
-	public void setDeviceFrom(AndroidDevice deviceFrom) {
+	public void setDeviceFrom(MobileDevice deviceFrom) {
 		this.deviceFrom = deviceFrom;
 	}
-	public List<AndroidDevice> getDevicesTo() {
+	public List<MobileDevice> getDevicesTo() {
 		return devicesTo;
 	}
-	public void setDevicesTo(List<AndroidDevice> devicesTo) {
+	public void setDevicesTo(List<MobileDevice> devicesTo) {
 		this.devicesTo = devicesTo;
 	} 
 	
-	public void addDeviceTo(AndroidDevice deviceTo){
+	public void addDeviceTo(MobileDevice deviceTo){
 		if(devicesTo==null){
-			devicesTo = new ArrayList<AndroidDevice>(10);
+			devicesTo = new ArrayList<MobileDevice>(10);
 		}
 		devicesTo.add(deviceTo);
 	}

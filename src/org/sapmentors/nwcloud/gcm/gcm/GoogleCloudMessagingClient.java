@@ -8,7 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-import org.sapmentors.nwcloud.gcm.model.AndroidDevice;
+import org.sapmentors.nwcloud.gcm.model.MobileDevice;
 import org.sapmentors.nwcloud.gcm.model.PersistenceClient;
 import org.sapmentors.nwcloud.gcm.model.PushMessageExternal;
 import org.sapmentors.nwcloud.gcm.model.PushMessageInternal;
@@ -50,8 +50,8 @@ public class GoogleCloudMessagingClient {
 		
 		//expand sender
 		try {
-			 AndroidDevice deviceFrom = entityManager.createNamedQuery(AndroidDevice.QUERY_BY_EMAIL,  
-		        		AndroidDevice.class).setParameter(AndroidDevice.QUERY_BY_EMAIL_PARAM, pushMessage.getEmailFrom()).getSingleResult();
+			 MobileDevice deviceFrom = entityManager.createNamedQuery(MobileDevice.QUERY_BY_EMAIL,  
+		        		MobileDevice.class).setParameter(MobileDevice.QUERY_BY_EMAIL_PARAM, pushMessage.getEmailFrom()).getSingleResult();
 			 pushMessage.setDeviceFrom(deviceFrom);
 		}catch(NoResultException exception){
 			throw new NoResultException("Sender's android device has not been registered for GCM sending in nwcloud backend");
@@ -68,8 +68,8 @@ public class GoogleCloudMessagingClient {
 			
 			
 			try {
-				 AndroidDevice deviceTo = entityManager.createNamedQuery(AndroidDevice.QUERY_BY_EMAIL,  
-			        		AndroidDevice.class).setParameter(AndroidDevice.QUERY_BY_EMAIL_PARAM, email).getSingleResult();
+				 MobileDevice deviceTo = entityManager.createNamedQuery(MobileDevice.QUERY_BY_EMAIL,  
+			        		MobileDevice.class).setParameter(MobileDevice.QUERY_BY_EMAIL_PARAM, email).getSingleResult();
 				 pushMessage.addDeviceTo(deviceTo);
 				 logger.debug(email + " found in database");
 			}catch(NoResultException exception){
@@ -104,11 +104,11 @@ public class GoogleCloudMessagingClient {
 
 		Message msg = new Message.Builder().addData("message", message).build();
 		
-		List<AndroidDevice> listRecipients = pushMessage.getDevicesTo();
+		List<MobileDevice> listRecipients = pushMessage.getDevicesTo();
 		
 		//logger.debug("Sending message to " +listRecipients.size() + " recipients");
-		for (Iterator<AndroidDevice> iterator = listRecipients.iterator(); iterator.hasNext();) {
-			AndroidDevice androidDevice = (AndroidDevice) iterator.next();
+		for (Iterator<MobileDevice> iterator = listRecipients.iterator(); iterator.hasNext();) {
+			MobileDevice androidDevice = (MobileDevice) iterator.next();
 			//Send the message
 			try {
 				logger.debug("Sending message to " + androidDevice.getEmail());
@@ -132,7 +132,7 @@ public class GoogleCloudMessagingClient {
 	 * @param androidDevice
 	 * @param result Returned from sender.send
 	 */
-	private void handleMessageResponse(AndroidDevice androidDevice,
+	private void handleMessageResponse(MobileDevice androidDevice,
 			Result result) {
 		EntityManager entityManager = persistenceClient.getEntityManager();
 		
