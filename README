@@ -1,5 +1,18 @@
-TODO
+For introduction to project, please see
+http://scn.sap.com/community/developer-center/cloud-platform/blog/2012/11/02/mobile-push-messages-with-sapnwcloud--fork-away
 
-Status:
-- Persistence of Android device data works
-- Message API using GCM not created yet 
+For companion client app for Android, see https://github.com/elsewhat/nwcloud-androidgcm-app
+
+The project provides a backend for handling the mobile push messages.
+It has the following responsibilities:
+Keep track of registered devices
+Handled through a REST interface called from the mobile clients
+
+Provide a push message interface to clients
+Handled through a REST interface called from an onPremise solution, a mobile client or any other program
+
+Send the push message to the mobile client
+Uses the framework provided by the mobile platform. Currently, only Google Cloud Messaging is used but easily extendable.
+(requires that we create a Google API project with GCM and that we generate a server API key)
+
+This project uses JPA for persistence and Jersey for REST interface.
